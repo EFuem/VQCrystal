@@ -1,0 +1,54 @@
+random_seed: 33
+batch_size: 128
+train_ratio: 0.6
+val_ratio: 0.2
+test_ratio: 0.2
+workers: 0
+epochs: 1000
+adjust_every: 12
+validate_every_epoch: 30
+
+
+# model config
+class_dim: 100
+pos_dim: 3
+lattice_dim: 6
+hidden_dim: 32
+latent_dim: 32
+k: 24
+encoder1_dim: [32,32]
+num_encoder2_layers: 2
+decoder1_dims: [32,32]
+decoder2_dims: [32,32]
+decoder_lattice_dims: [32,32]
+decoder_lattice_dims2: [32,32]
+codebooksize1: 32
+codebooksize2: 32
+codebooksizel: 256
+num_quantizers1: 2
+num_quantizers2: 8
+num_quantizersl: 8
+sample_codebook_temp: 0.1
+property: energy_per_atom
+
+# optimizer config
+warmup_epochs: 10
+warmup_factor: 0.1
+grad_clip: 1.0
+optimizer:
+  type: Adam
+  params:
+    lr: 0.0001
+    weight_decay: 0.0001
+
+# scheduler config
+scheduler:
+  type: CosineAnnealingLR
+  params:
+    T_max: 500
+    eta_min: 0.0000000001
+# scheduler:
+#   type: StepLR
+#   params:
+#     step_size: 50  
+#     gamma: 0.5 
