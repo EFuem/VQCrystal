@@ -85,7 +85,7 @@ cp ./geneticalgorithm_temp.py /{your root}/.conda/envs/vqcrystal/lib/python3.10/
 
 ## Datasets and Model weights
 
-Because of the file size limit of github, the related datasets (c2db, carbon_24, mp_20, mpts_52 and perov_5), final model checkpoints and model weight of OpenLAM can not be uploaded directly. Therefore we upload them to google drive. The link is:
+Because of the file size limit of github, the related datasets (c2db, carbon_24, mp_20, and perov_5), final model checkpoints and model weight of OpenLAM can not be uploaded directly. Therefore we upload them to google drive. The link is:
 
 *https://drive.google.com/drive/folders/1VT9-mJCQ1HWlL9iSRPQrb3_bHgkjFOGH?usp=sharing*
 
@@ -95,10 +95,10 @@ The users should sustitude the current blank folder `./ckpt` and `./data` with t
 
 ## Training and Evaluation
 
-We take mpts_52 dataset as an example, the training script can be launched with
+We take perov_5 dataset as an example, the training script can be launched with
 
 ```bash
-python main.py --data_path ./data/mpts_52 --config_path ./config/config_mpts_52.yaml
+python main.py --data_path ./data/perov_5 --config_path ./config/config_perov_5.yaml
 ```
 
 Also, you may pass `--wandb True` to enable online logging and `--save True` to save the best checkpoint.
@@ -106,7 +106,7 @@ Also, you may pass `--wandb True` to enable online logging and `--save True` to 
 To evaluate the trained model, we can launch
 
 ```bash
-python validate.py --data_path ./data/mpts_52 --config_path ./config/config_mpts_52.yaml
+python validate.py --data_path ./data/perov_5 --config_path ./config/config_perov_5.yaml
 ```
 
 ## Generate New Crystals

@@ -67,10 +67,6 @@ match args.dataset:
         args.data_path = os.path.join(main_folder, "data/mp_20")
         args.model_path = os.path.join(main_folder, "ckpt/mp_20/mp_20_model_weights_128_4_.pth")
         args.config_path = os.path.join(main_folder, "config/config_mp_20.yaml")
-    case "mpts_52":
-        args.data_path = os.path.join(main_folder, "data/mpts_52")
-        args.model_path = os.path.join(main_folder, "ckpt/mpts_52/mpts_52_model_weights_128_4_.pth")
-        args.config_path = os.path.join(main_folder, "config/config_mpts_52.yaml")
     case "carbon_24":
         args.data_path = os.path.join(main_folder, "data/perov_5")
         args.model_path = os.path.join(main_folder, "ckpt/perov_5/perov_5_model_weights_32_2_.pth")
