@@ -1,7 +1,7 @@
-pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.***+cu***.html
-pip install torch-scatter -f https://data.pyg.org/whl/torch-2.***+cu***.html   
+pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.5.1+cu118.html
+#pip install torch-scatter -f https://data.pyg.org/whl/torch-2.***+cu***.html   
 pip install pymatgen==2023.6.23
-pip install torch_geometric
+#pip install torch_geometric
 pip install tqdm
 pip install scikit-learn
 pip install vector_quantize_pytorch
