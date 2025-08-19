@@ -194,7 +194,7 @@ if __name__ == "__main__":
         
         print("loading model weights........")
         model.load_state_dict(
-            torch.load(f"./ckpt/{name}/{name}_model_weights_{config['codebooksize1']}_{config['num_quantizers1']}_.pth")["model_state_dict"], strict=False
+            torch.load(f"/workspace/VQCrystal/ckpt/{name}/{name}_model_weights_{config['codebooksize1']}_{config['num_quantizers1']}_.pth")["model_state_dict"], strict=False
         )
         print("Load OK!")
     optimizer = getattr(optim, config["optimizer"]["type"])(
