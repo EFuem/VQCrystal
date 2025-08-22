@@ -179,6 +179,7 @@ def main():
         log_every_n_steps=10,
         check_val_every_n_epoch=config.get("validate_every_epoch", 50),
         gradient_clip_val=config.get("grad_clip", None),
+        strategy="ddp_find_unused_parameters_true",
         accumulate_grad_batches=1,
         deterministic=True,
         enable_progress_bar=True,
