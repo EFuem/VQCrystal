@@ -3,6 +3,7 @@ import torch.nn as nn
 import numpy as np
 from torch import Tensor
 import torch.nn.functional as Func
+from tqdm import tqdm
 # from torch.autograd import Variable
 # from scipy.optimize import linear_sum_assignment
 # from tools import similarity_matrix, max_pooling_matching
@@ -726,15 +727,17 @@ class GraphVAE(nn.Module):
         crystal_atom_idx,
         properties,
         crystals,
-        accuracy=True,
+        accuracy=False,
     ):
         with torch.no_grad():
             len_lattice = lattice[..., :3]
             angle_lattice = lattice[..., 3:]
             lattice_target = self.normalizer.norm(lattice)
+            #print ('here')
             z_e = self.encode(
                 F, f_mask, nbr_fea, nbr_fea_idx, crystal_atom_idx, A, lattice_target
             )
+            #print ('here2')
             # pdb.set_trace()
             indices, z_q, commitment_loss = self.quantize(z_e, f_mask)
             zq2 = z_q[1]
@@ -742,19 +745,27 @@ class GraphVAE(nn.Module):
             recon_from_global = self.decode_from_global(
                 z_e[1], zq2 + torch.sum(z_q[0], dim=1, keepdim=False), z_q[0], f_mask
             )
+            #print ('here3')
             recon_lattice1 = self.decode_lattice_from_recon(recon_x, f_mask).sum(dim=-2)
+            #print ('here4')
             #recon_lattice2 = self.decode_lattice_from_vq(z_q, f_mask).sum(dim=-2)
             recon_lattice = recon_lattice1
             lattice_loss = Func.mse_loss(recon_lattice, lattice_target)
+            #print ('here5')
             prop_predict = self.decode_property_from_vq(z_q, f_mask).sum(dim=-2)
+            #print ('here6')
             prop_predict=self.normalizer_properties.denorm(prop_predict)
+            #print ('here7')
             property_loss = Func.mse_loss(prop_predict, properties)
+            #print ('here8')
             lattice_predict = self.normalizer.denorm(recon_lattice)
+            #print ('here9')
             #forces_predict=self.decode_force(z_e, z_q,f_mask)[f_mask]
             # pdb.set_trace()
             V_loss, P_loss = self.reconstruction_loss(
                 recon_x , F, f_mask
             )
+            #print ('here10')
             # V_loss_from_global, P_loss_from_global = self.reconstruction_loss(
             #     recon_from_global, F, f_mask
             # )
@@ -770,10 +781,11 @@ class GraphVAE(nn.Module):
             if accuracy:
                 recon_x[..., : self.d1] = Func.softmax(recon_x[..., : self.d1], dim=-1)
                 atom_acc = self.atom_accuracy(F, recon_x, f_mask)
+                #print ('here11')
                 match_accuracy_with_lattice, rms_dist_with_lattice = self.structure_matcher_with_lattice(
                     recon_x, f_mask, crystals,lattice_predict
                 )
-                
+            #print ('here12')
         return {
             'total_loss': self.lambdas[0] * V_loss
                         + self.lambdas[1] * P_loss
@@ -895,19 +907,29 @@ class GraphVAE(nn.Module):
         B = F_recon.shape[0]
         F_recon_ = F_recon  # B, N, K
         _, N, D = F_recon_.shape
+        print ('here in structure_matcher_with_lattice')
         F_recon_pad = F_recon_.masked_fill(~f_mask.unsqueeze(-1).expand(B, N, D), 0)
+        print ('here in structure_matcher_with_lattice')
         V_recon_pad = torch.narrow(F_recon_pad, dim=-1, start=0, length=self.d1)
+        print ('here in structure_matcher_with_lattice')
         P_recon_pad = torch.narrow(F_recon_pad, dim=-1, start=self.d1, length=self.d2)
+        print ('here in structure_matcher_with_lattice')
         P_recon_pad = (P_recon_pad + 1) / 2
+        print ('here in structure_matcher_with_lattice')
         element_recon_pad = argmax_with_custom_value(V_recon_pad)
+        print ('here in structure_matcher_with_lattice')
         P_list = tensor_to_list_based_on_mask(P_recon_pad, f_mask)
+        print ('here in structure_matcher_with_lattice')
         element_list = tensor_to_list_based_on_mask(element_recon_pad, f_mask)
+        print ('here in structure_matcher_with_lattice')
         lattice_list = lattice_predict.tolist()
+        print ('here in structure_matcher_with_lattice')
         idex = 0
         structure = None
         rms = []
-
-        for atom, position, lattice, crystal in zip(element_list, P_list, lattice_list, crystals):
+        print ('here10 in structure_matcher_with_lattice')
+        for atom, position, lattice, crystal in tqdm(zip(element_list, P_list, lattice_list, crystals)):
+            print ('idex',idex)
             idex += 1
             try:
                 lattice = Lattice.from_parameters(*lattice)
